@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Plan de Re‑inversión 70/30 — Minimal Dark</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    /* ====== Theme: Dark · Monochrome · Minimal ====== */
+    :root{
+      --bg:#0b0f14;          /* page background */
+      --card:#11161e;        /* surfaces */
+      --card-2:#0e131a;      /* deeper surface */
+      --text:#e7e9ed;        /* primary text */
+      --muted:#98a2b3;       /* secondary text */
+      --border:#1b2230;      /* lines */
+      --ring:rgba(255,255,255,.08); /* focus visuals */
+      --hi:#e5e7eb;          /* high contrast gray */
+      --mid:#a3a3a3;         /* mid gray */
+      --low:#6b7280;         /* low gray */
+      --radius:16px;
+      --shadow:0 8px 30px rgba(0,0,0,.45);
+      --shadow-soft:0 6px 18px rgba(0,0,0,.35);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{margin:0; font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,Arial; background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale}
+    .container{max-width:1080px; margin:28px auto 80px; padding:0 16px}
+
+    /* Header */
+    .header{display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:16px}
+    .brand{display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:.2px}
+    .brand .mark{width:12px; height:12px; border-radius:3px; background:#e5e7eb}
+    .subtitle{color:var(--muted); font-weight:600; font-size:13px}
+
+    /* Banner (monochrome pill) */
+    .banner{background:var(--card); border:1px solid var(--border); color:var(--text); border-radius:14px; padding:14px 16px; display:flex; align-items:center; gap:10px; box-shadow:var(--shadow-soft)}
+    .banner .pill{display:inline-flex; align-items:center; gap:10px; font-weight:700}
+    .banner .ic{width:26px; height:26px; display:grid; place-items:center; border:1px solid var(--border); border-radius:8px; background:var(--card-2)}
+
+    /* Grid */
+    .grid{display:grid; grid-template-columns:1.1fr .9fr; gap:16px; margin-top:16px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+
+    /* Cards */
+    .card{background:var(--card); border:1px solid var(--border); border-radius:var(--radius); box-shadow:var(--shadow-soft)}
+    .card-pad{padding:18px}
+    .card h3{margin:0 0 14px; font-size:18px}
+
+    /* Inputs */
+    label{display:block; font-size:12px; color:var(--muted); margin-bottom:6px}
+    input[type="number"], input[type="text"]{width:100%; padding:12px 14px; border:1px solid var(--border); border-radius:12px; background:var(--card-2); color:var(--text); font-weight:700; outline:none}
+    input[type="number"]:focus, input[type="text"]:focus{box-shadow:0 0 0 4px var(--ring)}
+
+    /* Segmented Phases */
+    .phases{display:flex; gap:8px}
+    .phase-btn{flex:1; min-width:110px; padding:10px 12px; border-radius:12px; border:1px solid var(--border); background:var(--card-2); color:var(--text); font-weight:800; cursor:pointer; letter-spacing:.2px}
+    .phase-btn[aria-pressed="true"]{background:#151b25; border-color:#2a3446}
+
+    /* Rating */
+    .stars{display:flex; align-items:center; gap:6px}
+    .star{font-size:20px; cursor:pointer; background:none; border:none; color:#6d7787; padding:0}
+    .star.active{color:#e6e8ec}
+    .rating-hint{font-size:12px; color:var(--muted); margin-left:8px}
+
+    /* Buttons */
+    .actions{display:flex; gap:10px}
+    .btn{display:inline-flex; justify-content:center; align-items:center; gap:8px; border:1px solid var(--border); background:transparent; color:var(--text); border-radius:12px; padding:12px 14px; font-weight:800; cursor:pointer}
+    .btn:hover{background:#141a23}
+    .btn:disabled{opacity:.55; cursor:not-allowed}
+
+    /* Distribution (monochrome bars) */
+    .dist-row{display:grid; grid-template-columns:140px 1fr auto; gap:12px; align-items:center; margin:12px 0}
+    .dist-label{display:flex; align-items:center; gap:10px; font-weight:800}
+    .dist-label .ic{width:26px; height:26px; border:1px solid var(--border); border-radius:6px; display:grid; place-items:center; background:var(--card-2)}
+    .bar{height:14px; background:#11161e; border-radius:999px; overflow:hidden; border:1px solid var(--border)}
+    .fill{height:100%; width:0%}
+    .fill-hi{background:linear-gradient(90deg,var(--hi),#c6c7cb)}
+    .fill-mid{background:linear-gradient(90deg,#bbb,#9aa0a6)}
+    .fill-low{background:linear-gradient(90deg,#7c828d,#5e6673)}
+    .dist-meta{font-weight:800; color:var(--muted); font-size:14px; min-width:152px; text-align:right}
+
+    .tips{margin-top:14px; border:1px dashed var(--border); border-radius:12px; padding:12px; background:var(--card-2)}
+    .tips strong{color:#c9cdd3}
+
+    /* History */
+    .history-empty{padding:28px; text-align:center; color:var(--muted); background:var(--card); border:1px dashed var(--border); border-radius:12px}
+    .history-list{display:grid; gap:12px}
+    .history-item{display:grid; grid-template-columns:1fr auto; gap:10px; align-items:center; padding:14px; border:1px solid var(--border); border-radius:14px; background:var(--card-2)}
+    .history-item h4{margin:0 0 6px; font-size:16px}
+    .badge{display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; font-size:12px; font-weight:700; border:1px solid var(--border); background:#131923; color:#cbd1d9}
+    .muted{color:var(--muted)}
+    .icon-btn{background:transparent; border:1px solid var(--border); padding:8px 10px; border-radius:10px; cursor:pointer}
+
+    /* Stages */
+    .section-title{margin:20px 0 12px; font-size:20px; font-weight:800}
+    .stages{display:grid; grid-template-columns:repeat(3,1fr); gap:14px}
+    @media (max-width:900px){.stages{grid-template-columns:1fr}}
+    .stage{padding:16px; border:1px solid var(--border); border-radius:16px; background:var(--card)}
+    .stage h4{margin:0 0 8px}
+    .stage small{color:var(--muted)}
+    .stage ul{margin:10px 0 0 18px}
+
+    footer{margin-top:24px; color:var(--muted); font-size:12px; text-align:center}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand"><span class="mark"></span><span>Plan de Re‑inversión 70/30</span></div>
+      <div class="subtitle">TikTok Shop</div>
+    </header>
+
+    <div class="banner" aria-label="Plan de Re‑inversión por ciclo de 15 días">
+      <div class="pill"><span class="ic">🗓️</span> Plan de Re‑inversión · Ciclo de 15 días</div>
+    </div>
+
+    <div class="grid">
+      <!-- Left: Calculator -->
+      <section class="card">
+        <div class="card-pad">
+          <h3>Calculadora de Re‑inversión</h3>
+
+          <div style="display:grid; gap:14px">
+            <div>
+              <label for="ingreso">Ingreso total del ciclo (MXN)</label>
+              <input type="number" inputmode="decimal" min="0" step="0.01" id="ingreso" placeholder="$ 0.00" />
+            </div>
+
+            <div>
+              <label>Fase de negocio actual</label>
+              <div class="phases" role="tablist" aria-label="Fases de negocio">
+                <button class="phase-btn" id="btn-f1" data-phase="fase1" aria-pressed="true">Fase 1</button>
+                <button class="phase-btn" id="btn-f2" data-phase="fase2" aria-pressed="false">Fase 2</button>
+                <button class="phase-btn" id="btn-f3" data-phase="fase3" aria-pressed="false">Fase 3</button>
+              </div>
+            </div>
+
+            <div>
+              <label>Calificación de cumplimiento</label>
+              <div class="stars" aria-label="Calificación">
+                <button class="star" data-v="1" title="1">★</button>
+                <button class="star" data-v="2" title="2">★</button>
+                <button class="star" data-v="3" title="3">★</button>
+                <button class="star" data-v="4" title="4">★</button>
+                <button class="star" data-v="5" title="5">★</button>
+                <span class="rating-hint" id="rating-hint">Sin calificar</span>
+              </div>
+            </div>
+
+            <div class="actions">
+              <button id="saveBtn" class="btn" disabled>💾 Guardar resultados del ciclo</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Right: Distribution -->
+      <aside class="card">
+        <div class="card-pad">
+          <h3>Distribución de ingresos</h3>
+
+          <div class="dist-row">
+            <div class="dist-label"><span class="ic">📦</span> <span id="lab-reinv">Reinversión</span></div>
+            <div class="bar"><div class="fill fill-hi" id="bar-reinv"></div></div>
+            <div class="dist-meta"><span id="pct-reinv">70%</span> &nbsp; <span id="amt-reinv">$0.00</span></div>
+          </div>
+
+          <div class="dist-row">
+            <div class="dist-label"><span class="ic">⎯</span> Utilidad</div>
+            <div class="bar"><div class="fill fill-mid" id="bar-util"></div></div>
+            <div class="dist-meta"><span id="pct-util">30%</span> &nbsp; <span id="amt-util">$0.00</span></div>
+          </div>
+
+          <div class="dist-row">
+            <div class="dist-label"><span class="ic">◎</span> <span id="lab-extra">Fondo de emergencia</span></div>
+            <div class="bar"><div class="fill fill-low" id="bar-extra"></div></div>
+            <div class="dist-meta"><span id="pct-extra">0%</span> &nbsp; <span id="amt-extra">$0.00</span></div>
+          </div>
+
+          <div class="tips" id="tips">
+            <div><strong>Reinversión:</strong> Más stock o nuevos productos, pruebas con creativos nuevos, mejora en empaque.</div>
+            <div><strong>Utilidad:</strong> Flujo personal o reserva para gastos operativos.</div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- History -->
+    <section class="card" style="margin-top:16px">
+      <div class="card-pad">
+        <h3>Historial de ciclos guardados</h3>
+        <div id="history" class="history-empty">No hay ciclos guardados aún<br/>Guarda tu primer ciclo para ver el historial aquí</div>
+      </div>
+    </section>
+
+    <h3 class="section-title">Fases del Negocio</h3>
+    <div class="stages">
+      <article class="stage">
+        <div class="badge">FASE 1 · Primeras Ventas</div>
+        <h4>Meta</h4>
+        <small>Validar producto y flujo de TikTok Shop.</small>
+        <p class="muted">Ingresos estimados: $0 – $5,000 MXN</p>
+        <h4>Distribución</h4>
+        <ul>
+          <li><strong>70% Reinversión</strong>: Más stock o nuevos productos, pruebas con creativos, mejora en empaque.</li>
+          <li><strong>30% Utilidad</strong>: Flujo personal o reserva para gastos operativos.</li>
+        </ul>
+      </article>
+      <article class="stage">
+        <div class="badge">FASE 2 · Escalamiento</div>
+        <h4>Meta</h4>
+        <small>Ampliar catálogo, optimizar procesos y escalar productos validados.</small>
+        <p class="muted">Ingresos estimados: $5,000 – $30,000 MXN</p>
+        <h4>Distribución</h4>
+        <ul>
+          <li><strong>60% Reinversión</strong>: Comprar más inventario del producto ganador y probar mínimo 1 producto por semana.</li>
+          <li><strong>30% Utilidad</strong>: Retiro personal, ahorro o inversión externa.</li>
+          <li><strong>10% Fondo de emergencia</strong>: Devoluciones, errores logísticos, imprevistos.</li>
+        </ul>
+      </article>
+      <article class="stage">
+        <div class="badge">FASE 3 · Consolidación</div>
+        <h4>Meta</h4>
+        <small>Generar ganancias consistentes, diversificar y delegar tareas.</small>
+        <p class="muted">Ingresos estimados: $30,000+ MXN al mes</p>
+        <h4>Distribución</h4>
+        <ul>
+          <li><strong>50% Reinversión</strong>: Nuevos productos con alto margen, delegación, crecimiento de marca.</li>
+          <li><strong>30% Utilidad</strong>: Flujo para estilo de vida o ahorro.</li>
+          <li><strong>20% Fondo de escalamiento</strong>: Para lanzamientos más agresivos.</li>
+        </ul>
+      </article>
+    </div>
+
+    <footer>Plan de Re‑inversión 70/30 · Ciclo de 15 días — RankLine MX</footer>
+  </div>
+
+  <script>
+    ;(function(){
+      const $ = (q,ctx=document)=>ctx.querySelector(q);
+      const $$ = (q,ctx=document)=>Array.from(ctx.querySelectorAll(q));
+
+      const ingresoEl = $('#ingreso');
+      const saveBtn = $('#saveBtn');
+      const historyEl = $('#history');
+      const stars = $$('.star');
+      const hint = $('#rating-hint');
+
+      // Distribution elements
+      const barReinv = $('#bar-reinv');
+      const barUtil  = $('#bar-util');
+      const barExtra = $('#bar-extra');
+      const pctReinv = $('#pct-reinv');
+      const pctUtil  = $('#pct-util');
+      const pctExtra = $('#pct-extra');
+      const amtReinv = $('#amt-reinv');
+      const amtUtil  = $('#amt-util');
+      const amtExtra = $('#amt-extra');
+      const labExtra = $('#lab-extra');
+
+      const tips = $('#tips');
+
+      const PHASES = {
+        fase1: {
+          name: 'Fase 1',
+          dist: { reinv:70, util:30, extra:0 },
+          extraLabel:'Fondo de emergencia',
+          tips:[
+            '<strong>Reinversión:</strong> Más stock o nuevos productos, pruebas con creativos nuevos, mejora en empaque.',
+            '<strong>Utilidad:</strong> Flujo personal o reserva para gastos operativos.'
+          ]
+        },
+        fase2: {
+          name:'Fase 2',
+          dist:{ reinv:60, util:30, extra:10 },
+          extraLabel:'Fondo de emergencia',
+          tips:[
+            '<strong>Reinversión:</strong> Comprar más inventario del producto ganador y probar mínimo 1 producto por semana.',
+            '<strong>Utilidad:</strong> Retiro personal, ahorro o inversión externa.',
+            '<strong>Fondo de emergencia:</strong> Devoluciones, errores logísticos, imprevistos.'
+          ]
+        },
+        fase3:{
+          name:'Fase 3',
+          dist:{ reinv:50, util:30, extra:20 },
+          extraLabel:'Fondo de escalamiento',
+          tips:[
+            '<strong>Reinversión:</strong> Nuevos productos con alto margen, delegación, crecimiento de marca.',
+            '<strong>Utilidad:</strong> Flujo para estilo de vida o ahorro.',
+            '<strong>Fondo de escalamiento:</strong> Presupuesto para lanzamientos más agresivos.'
+          ]
+        }
+      }
+
+      let state = {
+        phase:'fase1',
+        ingreso:0,
+        rating:0
+      };
+
+      const fmt = new Intl.NumberFormat('es-MX',{style:'currency', currency:'MXN', maximumFractionDigits:2});
+
+      function setPhase(phase){
+        if(!PHASES[phase]) return;
+        state.phase = phase;
+        $$('.phase-btn').forEach(b=>b.setAttribute('aria-pressed', String(b.dataset.phase===phase)));
+        const p = PHASES[phase];
+        labExtra.textContent = p.extraLabel;
+        pctReinv.textContent = p.dist.reinv + '%';
+        pctUtil.textContent  = p.dist.util + '%';
+        pctExtra.textContent = p.dist.extra + '%';
+        barReinv.style.width = p.dist.reinv + '%';
+        barUtil.style.width  = p.dist.util + '%';
+        barExtra.style.width = p.dist.extra + '%';
+        tips.innerHTML = p.tips.map(t=>`<div>${t}</div>`).join('');
+        renderAmounts();
+      }
+
+      function renderAmounts(){
+        const p = PHASES[state.phase].dist;
+        const total = Math.max(0, Number(ingresoEl.value || 0));
+        state.ingreso = total;
+        amtReinv.textContent = fmt.format(total * p.reinv / 100);
+        amtUtil.textContent  = fmt.format(total * p.util / 100);
+        amtExtra.textContent = fmt.format(total * p.extra / 100);
+        saveBtn.disabled = !(total > 0);
+      }
+
+      function setRating(v){
+        state.rating = v;
+        stars.forEach(s=>s.classList.toggle('active', Number(s.dataset.v) <= v));
+        hint.textContent = v ? `${v}/5` : 'Sin calificar';
+      }
+
+      function loadHistory(){
+        try{
+          return JSON.parse(localStorage.getItem('rankline.reinv70.history')||'[]');
+        }catch(e){return []}
+      }
+
+      function saveHistory(arr){
+        localStorage.setItem('rankline.reinv70.history', JSON.stringify(arr));
+      }
+
+      function renderHistory(){
+        const data = loadHistory();
+        if(!data.length){
+          historyEl.className = 'history-empty';
+          historyEl.innerHTML = 'No hay ciclos guardados aún<br/>Guarda tu primer ciclo para ver el historial aquí';
+          return;
+        }
+        historyEl.className = 'history-list';
+        historyEl.innerHTML = '';
+        for(const item of data){
+          const row = document.createElement('div');
+          row.className = 'history-item';
+          const date = new Date(item.ts).toLocaleString('es-MX',{dateStyle:'medium', timeStyle:'short'});
+          const amounts = item.amounts;
+          const extraLab = item.extraLabel;
+
+          row.innerHTML = `
+            <div>
+              <h4>${date} · ${item.phaseLabel}</h4>
+              <div class="muted">Ingreso: <strong>${fmt.format(item.ingreso)}</strong> · Calificación: ${'★'.repeat(item.rating)}${'☆'.repeat(5-item.rating)}</div>
+              <div style="margin-top:8px; display:flex; gap:8px; flex-wrap:wrap">
+                <span class="badge">Reinversión: ${fmt.format(amounts.reinv)} (${item.dist.reinv}%)</span>
+                <span class="badge">Utilidad: ${fmt.format(amounts.util)} (${item.dist.util}%)</span>
+                <span class="badge">${extraLab}: ${fmt.format(amounts.extra)} (${item.dist.extra}%)</span>
+              </div>
+            </div>
+            <div style="display:flex; gap:8px; align-items:center">
+              <button class="icon-btn" title="Eliminar" data-id="${item.id}">🗑️</button>
+            </div>
+          `;
+          historyEl.appendChild(row);
+        }
+        // wire delete
+        $$('.icon-btn', historyEl).forEach(btn=>{
+          btn.addEventListener('click', ()=>{
+            const id = btn.getAttribute('data-id');
+            const arr = loadHistory().filter(x=>x.id!==id);
+            saveHistory(arr); renderHistory();
+          })
+        })
+      }
+
+      // Events
+      $$('.phase-btn').forEach(btn=>{
+        btn.addEventListener('click', ()=> setPhase(btn.dataset.phase));
+      });
+
+      ingresoEl.addEventListener('input', renderAmounts);
+
+      stars.forEach(s=>{ s.addEventListener('click', ()=> setRating(Number(s.dataset.v))); });
+
+      saveBtn.addEventListener('click', ()=>{
+        const phase = state.phase; const conf = PHASES[phase];
+        const total = state.ingreso;
+        const dist = conf.dist;
+        const amounts = {
+          reinv: +(total*dist.reinv/100).toFixed(2),
+          util:  +(total*dist.util/100).toFixed(2),
+          extra: +(total*dist.extra/100).toFixed(2)
+        };
+        const item = {
+          id: crypto.randomUUID ? crypto.randomUUID() : String(Date.now()+Math.random()),
+          ts: Date.now(),
+          phaseLabel: conf.name,
+          extraLabel: conf.extraLabel,
+          ingreso: +(total.toFixed ? total.toFixed(2) : total),
+          rating: state.rating || 0,
+          dist, amounts
+        };
+        const arr = loadHistory();
+        arr.unshift(item);
+        saveHistory(arr);
+        renderHistory();
+        saveBtn.textContent = '✅ Ciclo guardado';
+        setTimeout(()=> saveBtn.textContent = '💾 Guardar resultados del ciclo', 1400);
+      })
+
+      // init
+      setPhase('fase1');
+      setRating(0);
+      renderHistory();
+    })();
+  </script>
+</body>
+</html>
